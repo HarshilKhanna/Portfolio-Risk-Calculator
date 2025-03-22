@@ -1,6 +1,6 @@
 "use client"
 
-import { useToast } from "@/Portfolio-Risk-Calculator/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import {
   Toast,
   ToastClose,
@@ -8,7 +8,7 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/Portfolio-Risk-Calculator/components/ui/toast"
+} from "@/components/ui/toast"
 
 export function Toaster() {
   const { toasts } = useToast()

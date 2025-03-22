@@ -10,11 +10,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/Portfolio-Risk-Calculator/components/ui/dialog"
-import { Button } from "@/Portfolio-Risk-Calculator/components/ui/button"
-import { Input } from "@/Portfolio-Risk-Calculator/components/ui/input"
-import { Label } from "@/Portfolio-Risk-Calculator/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Portfolio-Risk-Calculator/components/ui/select"
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { Asset } from "./portfolio-table"
 
 type EditAssetDialogProps = {

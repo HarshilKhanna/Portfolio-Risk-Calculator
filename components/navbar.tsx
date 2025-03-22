@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/Portfolio-Risk-Calculator/lib/utils"
+import { cn } from "@/lib/utils"
 import { ThemeToggle } from "./theme-toggle"
 import { BarChart3, Home, LineChart, PieChart } from "lucide-react"
 

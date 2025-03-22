@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/Portfolio-Risk-Calculator/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight } from "lucide-react"
 
 type SimulationSummaryData = {

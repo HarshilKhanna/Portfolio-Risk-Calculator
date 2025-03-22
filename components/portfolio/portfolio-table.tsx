@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Portfolio-Risk-Calculator/components/ui/table"
-import { Button } from "@/Portfolio-Risk-Calculator/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
 import { Edit, Trash2, ArrowUp, ArrowDown } from "lucide-react"
 import { EditAssetDialog } from "./edit-asset-dialog"
 import { DeleteAssetDialog } from "./delete-asset-dialog"

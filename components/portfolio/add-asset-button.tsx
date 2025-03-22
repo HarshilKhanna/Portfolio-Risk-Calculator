@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/Portfolio-Risk-Calculator/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { AddAssetDialog } from "./add-asset-dialog"
 

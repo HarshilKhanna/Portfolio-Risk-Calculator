@@ -9,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Portfolio-Risk-Calculator/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog"
 import type { Asset } from "./portfolio-table"
 
 type DeleteAssetDialogProps = {

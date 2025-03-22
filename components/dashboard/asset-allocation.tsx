@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "@/Portfolio-Risk-Calculator/components/ui/chart"
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "@/components/ui/chart"
 
 type AssetData = {
   name: string

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ArrowDown, ArrowUp } from "lucide-react"
-import { cn } from "@/Portfolio-Risk-Calculator/lib/utils"
+import { cn } from "@/lib/utils"
 
 export function PortfolioValue() {
   const [value, setValue] = useState(0)

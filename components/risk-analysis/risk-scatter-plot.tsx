@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   ZAxis,
   Legend,
-} from "@/Portfolio-Risk-Calculator/components/ui/chart"
+} from "@/components/ui/chart"
 
 type AssetRisk = {
   name: string
