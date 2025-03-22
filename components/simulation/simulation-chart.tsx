@@ -1,117 +1,158 @@
 "use client"
 
-import { useTheme } from "next-themes"
-import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { useState, useEffect } from "react"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  ReferenceLine,
+} from "@/Portfolio-Risk-Calculator/components/ui/chart"
 
-// Generate simulation data
-const generateSimulationData = () => {
-  const baseValue = 245678.9
-  const years = 10
-  const data = []
-
-  // Optimistic scenario: ~12% annual growth
-  const optimisticData = []
-  // Moderate scenario: ~8% annual growth
-  const moderateData = []
-  // Conservative scenario: ~5% annual growth
-  const conservativeData = []
-
-  for (let i = 0; i <= years; i++) {
-    const optimisticValue = baseValue * Math.pow(1.12, i)
-    const moderateValue = baseValue * Math.pow(1.08, i)
-    const conservativeValue = baseValue * Math.pow(1.05, i)
-
-    data.push({
-      year: `Year ${i}`,
-      optimistic: Math.round(optimisticValue),
-      moderate: Math.round(moderateValue),
-      conservative: Math.round(conservativeValue),
-    })
-  }
-
-  return data
+type SimulationData = {
+  month: number
+  current: number
+  simulated: number
 }
 
-const simulationData = generateSimulationData()
-
 export function SimulationChart() {
-  const { theme } = useTheme()
-  const isDark = theme === "dark"
+  const [data, setData] = useState<SimulationData[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
+  useEffect(() => {
+    // Generate initial simulation data
+    generateSimulationData()
+
+    // Listen for simulation events
+    const handleSimulation = () => {
+      generateSimulationData(true)
+    }
+
+    window.addEventListener("runSimulation", handleSimulation)
+
+    return () => {
+      window.removeEventListener("runSimulation", handleSimulation)
+    }
+  }, [])
+
+  const generateSimulationData = (isNewSimulation = false) => {
+    setIsLoading(true)
+
+    // Simulate loading data
+    setTimeout(() => {
+      const newData: SimulationData[] = []
+      const months = 60 // 5 years
+      let currentValue = 1000000
+      let simulatedValue = 1000000
+
+      // Current portfolio average monthly return (6% annual)
+      const currentMonthlyReturn = 0.005
+
+      // Simulated portfolio average monthly return (8% annual if new simulation, otherwise 7%)
+      const simulatedMonthlyReturn = isNewSimulation ? 0.0065 : 0.0058
+
+      // Standard deviation for randomness
+      const stdDev = 0.015
+
+      for (let i = 0; i <= months; i++) {
+        // Add some randomness to the returns
+        const currentRandomFactor = 1 + (currentMonthlyReturn + (Math.random() * stdDev * 2 - stdDev))
+        const simulatedRandomFactor = 1 + (simulatedMonthlyReturn + (Math.random() * stdDev * 2 - stdDev))
+
+        currentValue = currentValue * currentRandomFactor
+        simulatedValue = simulatedValue * simulatedRandomFactor
+
+        newData.push({
+          month: i,
+          current: Math.round(currentValue),
+          simulated: Math.round(simulatedValue),
+        })
+      }
+
+      setData(newData)
+      setIsLoading(false)
+    }, 800)
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
+      currency: "INR",
       maximumFractionDigits: 0,
-    }).format(value)
+    }).format(amount)
+  }
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background p-3 border rounded-md shadow-sm">
+          <p className="font-medium">Month {label}</p>
+          <p className="text-sm text-blue-600">Current: {formatCurrency(payload[0].value)}</p>
+          <p className="text-sm text-green-600">Simulated: {formatCurrency(payload[1].value)}</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Difference: {formatCurrency(payload[1].value - payload[0].value)}
+          </p>
+        </div>
+      )
+    }
+    return null
+  }
+
+  if (isLoading) {
+    return (
+      <div className="h-[400px] w-full flex items-center justify-center">
+        <div className="w-full max-w-lg space-y-4">
+          <div className="h-4 w-full bg-muted animate-pulse rounded"></div>
+          <div className="h-4 w-5/6 bg-muted animate-pulse rounded"></div>
+          <div className="h-4 w-4/5 bg-muted animate-pulse rounded"></div>
+          <div className="h-4 w-full bg-muted animate-pulse rounded"></div>
+          <div className="h-4 w-3/4 bg-muted animate-pulse rounded"></div>
+          <p className="text-center text-muted-foreground mt-4">Loading simulation data...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="h-[400px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={simulationData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="colorOptimistic" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--success))" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="hsl(var(--success))" stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id="colorModerate" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id="colorConservative" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--warning))" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="hsl(var(--warning))" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <XAxis
-            dataKey="year"
-            tick={{ fill: isDark ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground))" }}
-            axisLine={{ stroke: isDark ? "hsl(var(--border))" : "hsl(var(--border))" }}
-            tickLine={{ stroke: isDark ? "hsl(var(--border))" : "hsl(var(--border))" }}
-          />
+        <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+          <XAxis dataKey="month" label={{ value: "Months", position: "insideBottomRight", offset: -10 }} />
           <YAxis
-            tickFormatter={formatCurrency}
-            tick={{ fill: isDark ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground))" }}
-            axisLine={{ stroke: isDark ? "hsl(var(--border))" : "hsl(var(--border))" }}
-            tickLine={{ stroke: isDark ? "hsl(var(--border))" : "hsl(var(--border))" }}
-          />
-          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "hsl(var(--border))" : "hsl(var(--border))"} />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: isDark ? "hsl(var(--card))" : "hsl(var(--card))",
-              borderColor: isDark ? "hsl(var(--border))" : "hsl(var(--border))",
-              color: isDark ? "hsl(var(--card-foreground))" : "hsl(var(--card-foreground))",
+            tickFormatter={(value) => {
+              return new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+                notation: "compact",
+                maximumFractionDigits: 1,
+              }).format(value)
             }}
-            formatter={(value: number) => [formatCurrency(value), ""]}
           />
+          <Tooltip content={<CustomTooltip />} />
           <Legend />
-          <Area
+          <ReferenceLine y={data[0]?.current} stroke="#9CA3AF" strokeDasharray="3 3" />
+          <Line
             type="monotone"
-            dataKey="optimistic"
-            name="Optimistic"
-            stroke="hsl(var(--success))"
-            fillOpacity={1}
-            fill="url(#colorOptimistic)"
+            dataKey="current"
+            name="Current Portfolio"
+            stroke="#1E3A8A"
+            strokeWidth={2}
+            dot={false}
           />
-          <Area
+          <Line
             type="monotone"
-            dataKey="moderate"
-            name="Moderate"
-            stroke="hsl(var(--primary))"
-            fillOpacity={1}
-            fill="url(#colorModerate)"
+            dataKey="simulated"
+            name="Simulated Portfolio"
+            stroke="#10B981"
+            strokeWidth={2}
+            dot={false}
           />
-          <Area
-            type="monotone"
-            dataKey="conservative"
-            name="Conservative"
-            stroke="hsl(var(--warning))"
-            fillOpacity={1}
-            fill="url(#colorConservative)"
-          />
-        </AreaChart>
+        </LineChart>
       </ResponsiveContainer>
     </div>
   )

@@ -1,59 +1,47 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Portfolio-Risk-Calculator/components/ui/card"
-import { SimulationControls } from "@/Portfolio-Risk-Calculator/components/simulation/simulation-controls"
+import { PortfolioSimulator } from "@/Portfolio-Risk-Calculator/components/simulation/portfolio-simulator"
 import { SimulationChart } from "@/Portfolio-Risk-Calculator/components/simulation/simulation-chart"
 import { SimulationSummary } from "@/Portfolio-Risk-Calculator/components/simulation/simulation-summary"
-import { SimulationScenarios } from "@/Portfolio-Risk-Calculator/components/simulation/simulation-scenarios"
-import { SaveSimulationButton } from "@/Portfolio-Risk-Calculator/components/simulation/save-simulation-button"
 
 export default function SimulationPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight">Portfolio Simulation</h1>
-          <SaveSimulationButton />
-        </div>
-        <p className="text-muted-foreground">Simulate future portfolio performance based on different scenarios</p>
+    <div className="container mx-auto p-4 md:p-8 space-y-6">
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">Portfolio Simulation</h1>
+        <p className="text-muted-foreground">
+          Simulate different portfolio allocations and analyze potential outcomes.
+        </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="glass-card md:col-span-2">
+        <Card className="md:col-span-1 shadow-sm">
           <CardHeader>
-            <CardTitle>Future Performance Projection</CardTitle>
-            <CardDescription>Simulated portfolio growth over time</CardDescription>
+            <CardTitle>Allocation Simulator</CardTitle>
+            <CardDescription>Adjust asset allocations to simulate different scenarios</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <PortfolioSimulator />
+          </CardContent>
+        </Card>
+
+        <Card className="md:col-span-2 shadow-sm">
+          <CardHeader>
+            <CardTitle>Projected Growth</CardTitle>
+            <CardDescription>Simulated portfolio performance over time</CardDescription>
           </CardHeader>
           <CardContent>
             <SimulationChart />
           </CardContent>
         </Card>
-        <Card className="glass-card">
-          <CardHeader>
-            <CardTitle>Simulation Summary</CardTitle>
-            <CardDescription>Key metrics for the current simulation</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <SimulationSummary />
-          </CardContent>
-        </Card>
       </div>
 
-      <Card className="glass-card">
+      <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle>Simulation Controls</CardTitle>
-          <CardDescription>Adjust parameters to see different outcomes</CardDescription>
+          <CardTitle>Simulation Summary</CardTitle>
+          <CardDescription>Comparison between current and simulated portfolio</CardDescription>
         </CardHeader>
         <CardContent>
-          <SimulationControls />
-        </CardContent>
-      </Card>
-
-      <Card className="glass-card">
-        <CardHeader>
-          <CardTitle>Saved Scenarios</CardTitle>
-          <CardDescription>Your previously saved simulation scenarios</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SimulationScenarios />
+          <SimulationSummary />
         </CardContent>
       </Card>
     </div>
