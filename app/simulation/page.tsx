@@ -1,7 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Portfolio-Risk-Calculator/components/ui/card"
-import { PortfolioSimulator } from "@/Portfolio-Risk-Calculator/components/simulation/portfolio-simulator"
-import { SimulationChart } from "@/Portfolio-Risk-Calculator/components/simulation/simulation-chart"
-import { SimulationSummary } from "@/Portfolio-Risk-Calculator/components/simulation/simulation-summary"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { PortfolioSimulator } from "@/components/simulation/portfolio-simulator"
+import { SimulationChart } from "@/components/simulation/simulation-chart"
+import { SimulationSummary } from "@/components/simulation/simulation-summary"
 
 export default function SimulationPage() {
   return (

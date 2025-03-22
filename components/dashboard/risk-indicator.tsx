@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { cn } from "@/Portfolio-Risk-Calculator/lib/utils"
+import { cn } from "@/lib/utils"
 import { AlertTriangle, CheckCircle, Shield } from "lucide-react"
 
 type RiskLevel = "low" | "medium" | "high"

@@ -11,7 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
   ReferenceLine,
-} from "@/Portfolio-Risk-Calculator/components/ui/chart"
+} from "@/components/ui/chart"
 
 type SimulationData = {
   month: number

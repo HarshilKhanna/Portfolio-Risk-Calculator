@@ -10,7 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
-} from "@/Portfolio-Risk-Calculator/components/ui/chart"
+} from "@/components/ui/chart"
 
 type PerformanceData = {
   date: string

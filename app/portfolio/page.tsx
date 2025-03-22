@@ -1,6 +1,6 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Portfolio-Risk-Calculator/components/ui/card"
-import { PortfolioTable } from "@/Portfolio-Risk-Calculator/components/portfolio/portfolio-table"
-import { AddAssetButton } from "@/Portfolio-Risk-Calculator/components/portfolio/add-asset-button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { PortfolioTable } from "@/components/portfolio/portfolio-table"
+import { AddAssetButton } from "@/components/portfolio/add-asset-button"
 
 export default function PortfolioPage() {
   return (

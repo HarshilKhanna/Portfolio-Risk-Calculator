@@ -1,10 +1,10 @@
 "use client"
 
 import { useTheme } from "next-themes"
-import { Button } from "@/Portfolio-Risk-Calculator/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Monitor, Moon, Sun } from "lucide-react"
 import { useEffect, useState } from "react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Portfolio-Risk-Calculator/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()

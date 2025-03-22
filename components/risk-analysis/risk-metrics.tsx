@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent } from "@/Portfolio-Risk-Calculator/components/ui/card"
-import { Progress } from "@/Portfolio-Risk-Calculator/components/ui/progress"
+import { Card, CardContent } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
 
 type RiskMetric = {
   name: string

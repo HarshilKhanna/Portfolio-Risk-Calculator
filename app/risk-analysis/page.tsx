@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Portfolio-Risk-Calculator/components/ui/card"
-import { RiskMetrics } from "@/Portfolio-Risk-Calculator/components/risk-analysis/risk-metrics"
-import { RiskScatterPlot } from "@/Portfolio-Risk-Calculator/components/risk-analysis/risk-scatter-plot"
-import { RiskHeatmap } from "@/Portfolio-Risk-Calculator/components/risk-analysis/risk-heatmap"
-import { Button } from "@/Portfolio-Risk-Calculator/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { RiskMetrics } from "@/components/risk-analysis/risk-metrics"
+import { RiskScatterPlot } from "@/components/risk-analysis/risk-scatter-plot"
+import { RiskHeatmap } from "@/components/risk-analysis/risk-heatmap"
+import { Button } from "@/components/ui/button"
 import { RefreshCcw } from "lucide-react"
 
 export default function RiskAnalysisPage() {
