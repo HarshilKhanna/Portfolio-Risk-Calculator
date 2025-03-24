@@ -1,0 +1,51 @@
+[debug] [2025-03-24T13:13:14.402Z] ----------------------------------------------------------------------
+[debug] [2025-03-24T13:13:14.404Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\khann\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-03-24T13:13:14.405Z] CLI Version:   13.35.1
+[debug] [2025-03-24T13:13:14.405Z] Platform:      win32
+[debug] [2025-03-24T13:13:14.405Z] Node Version:  v20.16.0
+[debug] [2025-03-24T13:13:14.405Z] Time:          Mon Mar 24 2025 18:43:14 GMT+0530 (India Standard Time)
+[debug] [2025-03-24T13:13:14.405Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-03-24T13:13:14.618Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-03-24T13:13:14.618Z] > authorizing via signed-in user (khannaharshil7@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\khann\Downloads\portfolio-risk-manager-final\Portfolio-Risk-Calculator
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-03-24T13:13:20.753Z] Using project from CLI flag: portfolio-risk-calculator
+[debug] [2025-03-24T13:13:20.754Z] Checked if tokens are valid: true, expires at: 1742823301541
+[debug] [2025-03-24T13:13:20.754Z] Checked if tokens are valid: true, expires at: 1742823301541
+[debug] [2025-03-24T13:13:20.756Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/portfolio-risk-calculator [none]
+[debug] [2025-03-24T13:13:21.718Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/portfolio-risk-calculator 200
+[debug] [2025-03-24T13:13:21.719Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/portfolio-risk-calculator {"projectId":"portfolio-risk-calculator","projectNumber":"885986097955","displayName":"Portfolio-Risk-Calculator","name":"projects/portfolio-risk-calculator","resources":{"hostingSite":"portfolio-risk-calculator"},"state":"ACTIVE","etag":"1_014e3353-0b54-470e-9f23-446bdbd2ff6e"}
+[info] i  Using project portfolio-risk-calculator (Portfolio-Risk-Calculator) 
+[info] 
+=== Hosting Setup
+[debug] [2025-03-24T13:13:21.735Z] Checked if tokens are valid: true, expires at: 1742823301541
+[debug] [2025-03-24T13:13:21.735Z] Checked if tokens are valid: true, expires at: 1742823301541
+[debug] [2025-03-24T13:13:21.735Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/portfolio-risk-calculator [none]
+[debug] [2025-03-24T13:13:22.129Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/portfolio-risk-calculator 200
+[debug] [2025-03-24T13:13:22.130Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/portfolio-risk-calculator {"projectId":"portfolio-risk-calculator","projectNumber":"885986097955","displayName":"Portfolio-Risk-Calculator","name":"projects/portfolio-risk-calculator","resources":{"hostingSite":"portfolio-risk-calculator"},"state":"ACTIVE","etag":"1_014e3353-0b54-470e-9f23-446bdbd2ff6e"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
