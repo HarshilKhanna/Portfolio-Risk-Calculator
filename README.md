@@ -1,7 +1,7 @@
 # CapitaLens - Portfolio Risk Manager
 
 CapitaLens is a powerful portfolio management and risk analysis tool built using **Next.js**. It allows users to monitor their investment portfolios, evaluate risk metrics, and visualize key insights using a sleek and intuitive UI.
-Site : https://portfolio-risk-calculator.web.app/
+Site : [https://portfolio-risk-calculator.web.app/](https://capitalens-1hgsxfmzk-harshilkhannas-projects.vercel.app/)
 
 ## Features
 
