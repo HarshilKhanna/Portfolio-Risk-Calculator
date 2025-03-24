@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight } from "lucide-react"
+import { usePortfolio } from "@/src/context/PortfolioContext"
 
 type SimulationSummaryData = {
   metric: string
@@ -14,59 +15,93 @@ type SimulationSummaryData = {
 }
 
 export function SimulationSummary() {
+  const { assets } = usePortfolio()
   const [data, setData] = useState<SimulationSummaryData[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setData([
-        {
-          metric: "Expected Annual Return",
-          current: 6.2,
-          simulated: 7.8,
-          unit: "%",
-          isPercentage: true,
-          isHigherBetter: true,
-        },
-        {
-          metric: "Risk (Volatility)",
-          current: 12.5,
-          simulated: 14.2,
-          unit: "%",
-          isPercentage: true,
-          isHigherBetter: false,
-        },
-        {
-          metric: "Sharpe Ratio",
-          current: 1.8,
-          simulated: 2.1,
-          unit: "",
-          isPercentage: false,
-          isHigherBetter: true,
-        },
-        {
-          metric: "5-Year Projected Value",
-          current: 1345000,
-          simulated: 1460000,
-          unit: "₹",
-          isPercentage: false,
-          isHigherBetter: true,
-        },
-        {
-          metric: "Maximum Drawdown",
-          current: 15.3,
-          simulated: 17.8,
-          unit: "%",
-          isPercentage: true,
-          isHigherBetter: false,
-        },
-      ])
+    if (!assets.length) {
       setIsLoading(false)
-    }, 800)
+      return
+    }
 
-    return () => clearTimeout(timer)
-  }, [])
+    const totalValue = assets.reduce((acc, asset) => 
+      acc + (asset.quantity * asset.currentPrice * 86), 0
+    )
+
+    // Calculate actual portfolio metrics
+    const calculatePortfolioMetrics = () => {
+      const riskFreeRate = 0.07 // 7% annual
+      
+      // Calculate portfolio return
+      const portfolioReturn = assets.reduce((acc, asset) => {
+        const weight = (asset.quantity * asset.currentPrice * 86) / totalValue
+        const assetReturn = ((asset.currentPrice * 86) - asset.purchasePrice) / asset.purchasePrice * 100
+        return acc + (assetReturn * weight)
+      }, 0)
+
+      // Calculate portfolio volatility
+      const volatility = Math.sqrt(assets.reduce((acc, asset) => {
+        return acc + Math.pow(asset.regularMarketChangePercent, 2)
+      }, 0) / assets.length)
+
+      // Calculate Sharpe ratio
+      const sharpeRatio = (portfolioReturn - riskFreeRate) / volatility
+
+      return {
+        return: portfolioReturn,
+        volatility,
+        sharpeRatio,
+        value: totalValue
+      }
+    }
+
+    const metrics = calculatePortfolioMetrics()
+
+    setData([
+      {
+        metric: "Expected Annual Return",
+        current: Number(metrics.return.toFixed(1)),
+        simulated: Number((metrics.return * 1.2).toFixed(1)), // 20% improvement
+        unit: "%",
+        isPercentage: true,
+        isHigherBetter: true,
+      },
+      {
+        metric: "Risk (Volatility)",
+        current: Number(metrics.volatility.toFixed(1)),
+        simulated: Number((metrics.volatility * 0.9).toFixed(1)), // 10% reduction
+        unit: "%",
+        isPercentage: true,
+        isHigherBetter: false,
+      },
+      {
+        metric: "Sharpe Ratio",
+        current: Number(metrics.sharpeRatio.toFixed(2)),
+        simulated: Number((metrics.sharpeRatio * 1.15).toFixed(2)), // 15% improvement
+        unit: "",
+        isPercentage: false,
+        isHigherBetter: true,
+      },
+      {
+        metric: "5-Year Projected Value",
+        current: metrics.value,
+        simulated: metrics.value * 1.25, // 25% growth
+        unit: "₹",
+        isPercentage: false,
+        isHigherBetter: true,
+      },
+      {
+        metric: "Maximum Drawdown",
+        current: 15.3,
+        simulated: 13.8,
+        unit: "%",
+        isPercentage: true,
+        isHigherBetter: false,
+      },
+    ])
+    setIsLoading(false)
+  }, [assets])
 
   // Listen for simulation events to update the summary
   useEffect(() => {

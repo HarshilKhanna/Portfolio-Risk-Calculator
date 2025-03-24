@@ -12,6 +12,7 @@ import {
   ZAxis,
   Legend,
 } from "@/components/ui/chart"
+import { usePortfolio } from "@/src/context/PortfolioContext"
 
 type AssetRisk = {
   name: string
@@ -22,28 +23,37 @@ type AssetRisk = {
 }
 
 export function RiskScatterPlot() {
+  const { assets } = usePortfolio()
   const [data, setData] = useState<AssetRisk[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setData([
-        { name: "HDFC Bank", risk: 15, return: 18, allocation: 15, type: "Equity" },
-        { name: "Reliance Industries", risk: 18, return: 14, allocation: 12, type: "Equity" },
-        { name: "TCS", risk: 12, return: 16, allocation: 10, type: "Equity" },
-        { name: "Infosys", risk: 14, return: 15, allocation: 8, type: "Equity" },
-        { name: "Govt Bond 2030", risk: 3, return: 7, allocation: 15, type: "Bond" },
-        { name: "Corp Bond AAA", risk: 5, return: 8, allocation: 10, type: "Bond" },
-        { name: "Gold ETF", risk: 10, return: 9, allocation: 10, type: "Commodity" },
-        { name: "Silver ETF", risk: 12, return: 8, allocation: 5, type: "Commodity" },
-        { name: "Real Estate Fund", risk: 8, return: 12, allocation: 15, type: "Real Estate" },
-      ])
+    if (!assets.length) {
       setIsLoading(false)
-    }, 800)
+      return
+    }
 
-    return () => clearTimeout(timer)
-  }, [])
+    const totalValue = assets.reduce((acc, asset) => 
+      acc + (asset.quantity * asset.currentPrice * 86), 0
+    )
+
+    const riskReturnData: AssetRisk[] = assets.map(asset => {
+      const risk = Math.abs(asset.regularMarketChangePercent)
+      const return_ = ((asset.currentPrice * 86) - asset.purchasePrice) / asset.purchasePrice * 100
+      const allocation = (asset.quantity * asset.currentPrice * 86) / totalValue * 100
+
+      return {
+        name: asset.symbol,
+        risk,
+        return: return_,
+        allocation,
+        type: asset.type
+      }
+    })
+
+    setData(riskReturnData)
+    setIsLoading(false)
+  }, [assets])
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -101,7 +111,14 @@ export function RiskScatterPlot() {
   return (
     <div className="h-[400px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+        <ScatterChart 
+          margin={{ 
+            top: 20, 
+            right: 30, 
+            bottom: 60,
+            left: 80
+          }}
+        >
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
           <XAxis
             type="number"
@@ -109,7 +126,11 @@ export function RiskScatterPlot() {
             name="Risk"
             unit="%"
             domain={[0, "dataMax"]}
-            label={{ value: "Risk (%)", position: "bottom", offset: 0 }}
+            label={{ 
+              value: "Risk (%)", 
+              position: "bottom", 
+              offset: 10
+            }}
           />
           <YAxis
             type="number"
@@ -117,11 +138,35 @@ export function RiskScatterPlot() {
             name="Return"
             unit="%"
             domain={[0, "dataMax"]}
-            label={{ value: "Return (%)", angle: -90, position: "left" }}
+            tickFormatter={(value) => value.toFixed(2)}
+            label={{ 
+              value: "Return (%)", 
+              angle: -90, 
+              position: "insideLeft",
+              offset: -35,
+              dy: 50
+            }}
+            tickMargin={10}
           />
-          <ZAxis type="number" dataKey="allocation" range={[50, 400]} name="Allocation" unit="%" />
+          <ZAxis 
+            type="number" 
+            dataKey="allocation" 
+            range={[50, 400]} 
+            name="Allocation" 
+            unit="%" 
+          />
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
+          <Legend 
+            verticalAlign="bottom" 
+            align="center"
+            layout="horizontal"
+            wrapperStyle={{
+              paddingTop: "20px",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)"
+            }}
+          />
 
           {Object.entries(groupedData).map(([type, assets]) => (
             <Scatter key={type} name={type} data={assets} fill={getTypeColor(type)} />

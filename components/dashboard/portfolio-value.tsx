@@ -3,22 +3,35 @@
 import { useState, useEffect } from "react"
 import { ArrowDown, ArrowUp } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { usePortfolio } from "@/src/context/PortfolioContext"
 
 export function PortfolioValue() {
+  const { assets } = usePortfolio()
   const [value, setValue] = useState(0)
   const [change, setChange] = useState(0)
   const [changePercent, setChangePercent] = useState(0)
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setValue(1258750)
-      setChange(12500)
-      setChangePercent(1.2)
-    }, 500)
+    if (!assets.length) return
 
-    return () => clearTimeout(timer)
-  }, [])
+    // Calculate current total value
+    const currentValue = assets.reduce((acc, asset) => 
+      acc + (asset.quantity * asset.currentPrice * 86), 0
+    )
+
+    // Calculate daily change
+    const previousValue = assets.reduce((acc, asset) => {
+      const previousPrice = asset.currentPrice * (1 - asset.regularMarketChangePercent / 100) * 86
+      return acc + (asset.quantity * previousPrice)
+    }, 0)
+
+    const dailyChange = currentValue - previousValue
+    const dailyChangePercent = (dailyChange / previousValue) * 100
+
+    setValue(currentValue)
+    setChange(dailyChange)
+    setChangePercent(dailyChangePercent)
+  }, [assets])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-IN", {

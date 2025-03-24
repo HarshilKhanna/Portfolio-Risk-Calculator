@@ -42,7 +42,7 @@ export default function RiskAnalysisPage() {
 
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle>Risk Exposure Heatmap</CardTitle>
+            <CardTitle>Sharpe Ratio Distribution</CardTitle>
             <CardDescription>Visualize risk concentration</CardDescription>
           </CardHeader>
           <CardContent>

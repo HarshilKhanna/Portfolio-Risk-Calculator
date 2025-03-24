@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PortfolioValue } from "@/components/dashboard/portfolio-value"
 import { PortfolioMetrics } from "@/components/dashboard/portfolio-metrics"
 import { AssetAllocation } from "@/components/dashboard/asset-allocation"
-import { PerformanceChart } from "@/components/dashboard/performance-chart"
+import { TradingDaysAnalysis } from "@/components/dashboard/performance-chart"
 import { RiskIndicator } from "@/components/dashboard/risk-indicator"
 import { SectorDistribution } from "@/components/dashboard/sector-distribution"
 import { Button } from "@/components/ui/button"
@@ -44,8 +44,8 @@ export default function Dashboard() {
 
         <Card className="col-span-1 shadow-sm">
           <CardHeader>
-            <CardTitle>Sector Distribution</CardTitle>
-            <CardDescription>Exposure across market sectors</CardDescription>
+            <CardTitle>Summary</CardTitle>
+            <CardDescription>Your Portfolio at a glance</CardDescription>
           </CardHeader>
           <CardContent className="px-2">
             <SectorDistribution />
@@ -54,34 +54,11 @@ export default function Dashboard() {
 
         <Card className="col-span-full md:col-span-2 shadow-sm">
           <CardHeader>
-            <CardTitle>Performance History</CardTitle>
-            <CardDescription>Portfolio performance over time</CardDescription>
+            <CardTitle>Asset Performance</CardTitle>
+            <CardDescription>Portfolio performance</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="1m" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="1w">1w</TabsTrigger>
-                <TabsTrigger value="1m">1m</TabsTrigger>
-                <TabsTrigger value="3m">3m</TabsTrigger>
-                <TabsTrigger value="1y">1y</TabsTrigger>
-                <TabsTrigger value="all">All</TabsTrigger>
-              </TabsList>
-              <TabsContent value="1w" className="space-y-4">
-                <PerformanceChart days={7} />
-              </TabsContent>
-              <TabsContent value="1m" className="space-y-4">
-                <PerformanceChart days={30} />
-              </TabsContent>
-              <TabsContent value="3m" className="space-y-4">
-                <PerformanceChart days={90} />
-              </TabsContent>
-              <TabsContent value="1y" className="space-y-4">
-                <PerformanceChart days={365} />
-              </TabsContent>
-              <TabsContent value="all" className="space-y-4">
-                <PerformanceChart days={730} />
-              </TabsContent>
-            </Tabs>
+            <TradingDaysAnalysis />
           </CardContent>
         </Card>
 

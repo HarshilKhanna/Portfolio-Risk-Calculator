@@ -3,22 +3,45 @@
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { AlertTriangle, CheckCircle, Shield } from "lucide-react"
+import { usePortfolio } from "@/src/context/PortfolioContext"
 
 type RiskLevel = "low" | "medium" | "high"
 
 export function RiskIndicator() {
+  const { assets } = usePortfolio()
   const [riskLevel, setRiskLevel] = useState<RiskLevel | null>(null)
   const [riskScore, setRiskScore] = useState(0)
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setRiskScore(65)
-      setRiskLevel("medium")
-    }, 700)
+    if (!assets.length) return
 
-    return () => clearTimeout(timer)
-  }, [])
+    // Calculate risk score based on portfolio volatility and asset types
+    const calculateRiskScore = () => {
+      const totalValue = assets.reduce((acc, asset) => 
+        acc + (asset.quantity * asset.currentPrice * 86), 0
+      )
+
+      // Calculate weighted volatility
+      const portfolioVolatility = assets.reduce((acc, asset) => {
+        const weight = (asset.quantity * asset.currentPrice * 86) / totalValue
+        return acc + (Math.abs(asset.regularMarketChangePercent) * weight)
+      }, 0)
+
+      // Convert volatility to 0-100 score
+      const score = Math.min(Math.max(portfolioVolatility * 5, 0), 100)
+
+      // Determine risk level
+      let level: RiskLevel = "medium"
+      if (score < 40) level = "low"
+      if (score > 70) level = "high"
+
+      return { score, level }
+    }
+
+    const { score, level } = calculateRiskScore()
+    setRiskScore(score)
+    setRiskLevel(level)
+  }, [assets])
 
   const getRiskColor = (level: RiskLevel | null) => {
     switch (level) {

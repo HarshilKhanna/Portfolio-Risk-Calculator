@@ -10,7 +10,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import type { Asset } from "./portfolio-table"
+
+// Update the Asset type to match your PortfolioContext
+interface Asset {
+  symbol: string;
+  longName: string;
+  quantity: number;
+  purchasePrice: number;
+  currentPrice: number;
+  regularMarketChangePercent: number;
+  value: number;
+  costBasis: number;
+  type: string;
+  purchaseDate: string;
+}
 
 type DeleteAssetDialogProps = {
   asset: Asset
@@ -26,7 +39,7 @@ export function DeleteAssetDialog({ asset, open, onOpenChange, onDelete }: Delet
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete {asset.name} from your portfolio. This action cannot be undone.
+            This will permanently delete {asset.symbol} ({asset.longName}) from your portfolio. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

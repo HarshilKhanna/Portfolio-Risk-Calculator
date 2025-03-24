@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "@/components/ui/chart"
+import { usePortfolio } from "@/src/context/PortfolioContext"
 
 type SimulationData = {
   month: number
@@ -20,6 +21,7 @@ type SimulationData = {
 }
 
 export function SimulationChart() {
+  const { assets } = usePortfolio()
   const [data, setData] = useState<SimulationData[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -42,40 +44,49 @@ export function SimulationChart() {
   const generateSimulationData = (isNewSimulation = false) => {
     setIsLoading(true)
 
-    // Simulate loading data
-    setTimeout(() => {
-      const newData: SimulationData[] = []
-      const months = 60 // 5 years
-      let currentValue = 1000000
-      let simulatedValue = 1000000
+    // Calculate current portfolio value
+    const currentPortfolioValue = assets.reduce((acc, asset) => 
+      acc + (asset.quantity * asset.currentPrice * 86), 0
+    )
 
-      // Current portfolio average monthly return (6% annual)
-      const currentMonthlyReturn = 0.005
+    // Calculate current portfolio return
+    const currentReturn = assets.reduce((acc, asset) => {
+      const weight = (asset.quantity * asset.currentPrice * 86) / currentPortfolioValue
+      const assetReturn = ((asset.currentPrice * 86) - asset.purchasePrice) / asset.purchasePrice
+      return acc + (assetReturn * weight)
+    }, 0)
 
-      // Simulated portfolio average monthly return (8% annual if new simulation, otherwise 7%)
-      const simulatedMonthlyReturn = isNewSimulation ? 0.0065 : 0.0058
+    // Use actual portfolio metrics for simulation
+    const currentMonthlyReturn = currentReturn / 12
+    const simulatedMonthlyReturn = isNewSimulation ? 
+      currentMonthlyReturn * 1.2 : // 20% improvement
+      currentMonthlyReturn * 1.1   // 10% improvement
 
-      // Standard deviation for randomness
-      const stdDev = 0.015
+    const newData: SimulationData[] = []
+    const months = 60
+    let currentValue = currentPortfolioValue
+    let simulatedValue = currentPortfolioValue
 
-      for (let i = 0; i <= months; i++) {
-        // Add some randomness to the returns
-        const currentRandomFactor = 1 + (currentMonthlyReturn + (Math.random() * stdDev * 2 - stdDev))
-        const simulatedRandomFactor = 1 + (simulatedMonthlyReturn + (Math.random() * stdDev * 2 - stdDev))
+    // Standard deviation for randomness
+    const stdDev = 0.015
 
-        currentValue = currentValue * currentRandomFactor
-        simulatedValue = simulatedValue * simulatedRandomFactor
+    for (let i = 0; i <= months; i++) {
+      // Add some randomness to the returns
+      const currentRandomFactor = 1 + (currentMonthlyReturn + (Math.random() * stdDev * 2 - stdDev))
+      const simulatedRandomFactor = 1 + (simulatedMonthlyReturn + (Math.random() * stdDev * 2 - stdDev))
 
-        newData.push({
-          month: i,
-          current: Math.round(currentValue),
-          simulated: Math.round(simulatedValue),
-        })
-      }
+      currentValue = currentValue * currentRandomFactor
+      simulatedValue = simulatedValue * simulatedRandomFactor
 
-      setData(newData)
-      setIsLoading(false)
-    }, 800)
+      newData.push({
+        month: i,
+        current: Math.round(currentValue),
+        simulated: Math.round(simulatedValue),
+      })
+    }
+
+    setData(newData)
+    setIsLoading(false)
   }
 
   const formatCurrency = (amount: number) => {

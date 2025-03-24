@@ -22,11 +22,6 @@ const navItems = [
     href: "/risk-analysis",
     icon: BarChart3,
   },
-  {
-    name: "Simulation",
-    href: "/simulation",
-    icon: LineChart,
-  },
 ]
 
 export default function Navbar() {
@@ -38,9 +33,9 @@ export default function Navbar() {
         <div className="mr-8 flex items-center">
           <Link href="/" className="flex items-center">
             <div className="relative h-8 w-8 mr-2 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">PR</span>
+              <span className="text-primary-foreground font-bold">CL</span>
             </div>
-            <span className="hidden font-bold text-xl md:inline-block">Portfolio Risk</span>
+            <span className="hidden font-bold text-xl md:inline-block">CapitaLens</span>
           </Link>
         </div>
         <div className="flex-1 flex items-center justify-between">

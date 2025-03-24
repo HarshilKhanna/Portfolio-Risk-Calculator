@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { PlayCircle, Save } from "lucide-react"
+import { usePortfolio } from "@/src/context/PortfolioContext"
 
 type AssetAllocation = {
   name: string
@@ -13,50 +14,74 @@ type AssetAllocation = {
 }
 
 export function PortfolioSimulator() {
-  const [assets, setAssets] = useState<AssetAllocation[]>([])
+  const { assets } = usePortfolio()
+  const [allocations, setAllocations] = useState<AssetAllocation[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [totalAllocation, setTotalAllocation] = useState(100)
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setAssets([
-        { name: "Equities", allocation: 45, color: "#1E3A8A" },
-        { name: "Bonds", allocation: 25, color: "#10B981" },
-        { name: "Real Estate", allocation: 15, color: "#EF4444" },
-        { name: "Commodities", allocation: 10, color: "#F59E0B" },
-        { name: "Cash", allocation: 5, color: "#6B7280" },
-      ])
+    if (!assets.length) {
       setIsLoading(false)
-    }, 600)
+      return
+    }
 
-    return () => clearTimeout(timer)
-  }, [])
+    // Calculate current allocations from portfolio
+    const totalValue = assets.reduce((acc, asset) => 
+      acc + (asset.quantity * asset.currentPrice * 86), 0
+    )
+
+    // Group assets by type and calculate allocations
+    const groupedAllocations = assets.reduce((acc: { [key: string]: number }, asset) => {
+      const value = (asset.quantity * asset.currentPrice * 86)
+      const type = asset.type || 'Other'
+      acc[type] = (acc[type] || 0) + (value / totalValue * 100)
+      return acc
+    }, {})
+
+    // Convert to AssetAllocation array with colors
+    const typeColors: { [key: string]: string } = {
+      'Equity': '#1E3A8A',
+      'Bond': '#10B981',
+      'Real Estate': '#EF4444',
+      'Commodity': '#F59E0B',
+      'Cash': '#6B7280',
+      'Other': '#6B7280'
+    }
+
+    const newAllocations = Object.entries(groupedAllocations).map(([type, allocation]) => ({
+      name: type,
+      allocation: Number(allocation.toFixed(1)),
+      color: typeColors[type] || typeColors.Other
+    }))
+
+    setAllocations(newAllocations)
+    setIsLoading(false)
+  }, [assets])
 
   useEffect(() => {
     // Calculate total allocation
-    const total = assets.reduce((sum, asset) => sum + asset.allocation, 0)
+    const total = allocations.reduce((sum, asset) => sum + asset.allocation, 0)
     setTotalAllocation(total)
-  }, [assets])
+  }, [allocations])
 
   const handleAllocationChange = (index: number, value: number[]) => {
-    const newAssets = [...assets]
-    newAssets[index].allocation = value[0]
-    setAssets(newAssets)
+    const newAllocations = [...allocations]
+    newAllocations[index].allocation = value[0]
+    setAllocations(newAllocations)
   }
 
   const runSimulation = () => {
     // In a real app, this would trigger a simulation calculation
-    console.log("Running simulation with allocations:", assets)
+    console.log("Running simulation with allocations:", allocations)
 
     // Dispatch an event that the simulation chart component can listen to
-    const event = new CustomEvent("runSimulation", { detail: { assets } })
+    const event = new CustomEvent("runSimulation", { detail: { allocations } })
     window.dispatchEvent(event)
   }
 
   const saveSimulation = () => {
     // In a real app, this would save the simulation
-    console.log("Saving simulation with allocations:", assets)
+    console.log("Saving simulation with allocations:", allocations)
   }
 
   if (isLoading) {
@@ -84,7 +109,7 @@ export function PortfolioSimulator() {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        {assets.map((asset, index) => (
+        {allocations.map((asset, index) => (
           <div key={asset.name} className="space-y-2">
             <div className="flex justify-between items-center">
               <Label className="font-medium">{asset.name}</Label>
