@@ -118,26 +118,36 @@ const defaultPortfolio: PortfolioAsset[] = [
 ];
 
 export function PortfolioProvider({ children }: { children: React.ReactNode }) {
-  // Initialize with defaultPortfolio
   const [assets, setAssets] = useState<PortfolioAsset[]>(defaultPortfolio);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Load assets from localStorage on mount
   useEffect(() => {
-    const savedAssets = localStorage.getItem('portfolio');
-    if (savedAssets) {
-      // If there's saved data, use it
-      setAssets(JSON.parse(savedAssets));
+    // Check if we're in the browser
+    if (typeof window !== 'undefined') {
+      const savedAssets = localStorage.getItem('portfolio');
+      if (savedAssets) {
+        try {
+          const parsedAssets = JSON.parse(savedAssets);
+          setAssets(parsedAssets);
+        } catch (e) {
+          console.error('Error parsing saved portfolio:', e);
+          // If there's an error parsing, keep the default portfolio
+        }
+      }
     }
-    // If no saved data, we'll keep the defaultPortfolio that we initialized with
     setIsLoading(false);
   }, []);
 
-  // Save assets to localStorage when they change
+  // Save assets to localStorage whenever they change
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem('portfolio', JSON.stringify(assets));
+    if (!isLoading && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('portfolio', JSON.stringify(assets));
+      } catch (e) {
+        console.error('Error saving portfolio:', e);
+      }
     }
   }, [assets, isLoading]);
 
@@ -257,12 +267,16 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     };
   };
 
-  const clearPortfolio = () => {
+  const clearPortfolio = useCallback(() => {
     setAssets([]);
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('portfolio');
+      try {
+        localStorage.removeItem('portfolio');
+      } catch (e) {
+        console.error('Error clearing portfolio:', e);
+      }
     }
-  };
+  }, []);
 
   const editAsset = useCallback((symbol: string, updates: Partial<PortfolioAsset>) => {
     setIsLoading(true);
